@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios - BAS SaaS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-body">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+                <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                <path d="M12 20L18 26L28 14" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <defs>
+                    <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40">
+                        <stop offset="0%" stop-color="#2563EB"/>
+                        <stop offset="100%" stop-color="#10B981"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+            <span class="brand-name">BAS</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item">
+                <span class="icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="users.html" class="nav-item active">
+                <span class="icon">👥</span>
+                <span>Usuarios</span>
+            </a>
+            <a href="subscriptions.html" class="nav-item">
+                <span class="icon">💳</span>
+                <span>Suscripciones</span>
+            </a>
+            <a href="analytics.html" class="nav-item">
+                <span class="icon">📈</span>
+                <span>Analytics</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <span class="icon">⚙️</span>
+                <span>Configuración</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">A</div>
+                <div class="user-details">
+                    <div class="user-name" id="userName">Loading...</div>
+                    <div class="user-email" id="userEmail">loading@...</div>
+                </div>
+            </div>
+            <button class="btn-logout" id="logoutBtn">🚪 Salir</button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="dashboard-header">
+            <div>
+                <h1>Usuarios</h1>
+                <p class="subtitle">Gestiona todos los usuarios de la plataforma</p>
+            </div>
+            <div class="header-actions">
+                <input type="search" placeholder="🔍 Buscar usuario..." class="search-input" id="searchUsers">
+                <button class="btn-primary" id="addUserBtn">➕ Nuevo usuario</button>
+            </div>
+        </header>
+
+        <!-- Stats Row -->
+        <div class="stats-row">
+            <div class="stat-card-small">
+                <div class="stat-label">Total usuarios</div>
+                <div class="stat-value" id="totalUsers">0</div>
+            </div>
+            <div class="stat-card-small">
+                <div class="stat-label">Activos hoy</div>
+                <div class="stat-value" id="activeToday">0</div>
+            </div>
+            <div class="stat-card-small">
+                <div class="stat-label">Nuevos (30d)</div>
+                <div class="stat-value" id="new30d">0</div>
+            </div>
+            <div class="stat-card-small">
+                <div class="stat-label">Tasa conversión</div>
+                <div class="stat-value" id="conversionRate">0%</div>
+            </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="table-card full-width">
+            <div class="table-header">
+                <h3>Todos los usuarios</h3>
+                <div class="table-filters">
+                    <select id="planFilter">
+                        <option value="all">Todos los planes</option>
+                        <option value="free">Free</option>
+                        <option value="starter">Starter</option>
+                        <option value="pro">Pro</option>
+                        <option value="enterprise">Enterprise</option>
+                    </select>
+                    <select id="statusFilter">
+                        <option value="all">Todos los estados</option>
+                        <option value="active">Activos</option>
+                        <option value="inactive">Inactivos</option>
+                    </select>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Email</th>
+                            <th>Plan</th>
+                            <th>Registro</th>
+                            <th>Último acceso</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Edit User Modal -->
+    <div class="modal-overlay" id="editUserModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeEditModal">×</button>
+            <h2>Editar usuario</h2>
+            <form id="editUserForm">
+                <input type="hidden" id="editUserId">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" id="editUserName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="editUserEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Plan</label>
+                    <select id="editUserPlan">
+                        <option value="free">Free</option>
+                        <option value="starter">Starter</option>
+                        <option value="pro">Pro</option>
+                        <option value="enterprise">Enterprise</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Rol</label>
+                    <select id="editUserRole">
+                        <option value="user">Usuario</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancelEdit">Cancelar</button>
+                    <button type="submit" class="btn-primary">Guardar cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/users.js"></script>
+</body>
+</html>

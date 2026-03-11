@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suscripciones - BAS SaaS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-body">
+    <!-- Sidebar (same as before) -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+                <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                <path d="M12 20L18 26L28 14" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <defs>
+                    <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40">
+                        <stop offset="0%" stop-color="#2563EB"/>
+                        <stop offset="100%" stop-color="#10B981"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+            <span class="brand-name">BAS</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item">
+                <span class="icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="users.html" class="nav-item">
+                <span class="icon">👥</span>
+                <span>Usuarios</span>
+            </a>
+            <a href="subscriptions.html" class="nav-item active">
+                <span class="icon">💳</span>
+                <span>Suscripciones</span>
+            </a>
+            <a href="analytics.html" class="nav-item">
+                <span class="icon">📈</span>
+                <span>Analytics</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <span class="icon">⚙️</span>
+                <span>Configuración</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">A</div>
+                <div class="user-details">
+                    <div class="user-name" id="userName">Loading...</div>
+                    <div class="user-email" id="userEmail">loading@...</div>
+                </div>
+            </div>
+            <button class="btn-logout" id="logoutBtn">🚪 Salir</button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="dashboard-header">
+            <div>
+                <h1>Mi suscripción</h1>
+                <p class="subtitle">Gestiona tu plan y facturación</p>
+            </div>
+        </header>
+
+        <!-- Current Plan Card -->
+        <div class="current-plan-card">
+            <div class="plan-header">
+                <div>
+                    <h2 id="currentPlanName">Plan Pro</h2>
+                    <p class="plan-description">Ideal para equipos en crecimiento</p>
+                </div>
+                <div class="plan-price">
+                    <span class="price-amount" id="currentPlanPrice">$79</span>
+                    <span class="price-period">/mes</span>
+                </div>
+            </div>
+            <div class="plan-features" id="currentPlanFeatures">
+                <!-- Populated by JS -->
+            </div>
+            <div class="plan-actions">
+                <button class="btn-secondary" id="changePlanBtn">Cambiar plan</button>
+                <button class="btn-danger" id="cancelPlanBtn">Cancelar suscripción</button>
+            </div>
+        </div>
+
+        <!-- Available Plans -->
+        <div class="plans-section" id="plansSection" style="display:none;">
+            <h2>Planes disponibles</h2>
+            <p class="subtitle">Elige el plan que mejor se adapte a tus necesidades</p>
+            
+            <div class="plans-grid" id="plansGrid">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- Payment History -->
+        <div class="table-card full-width">
+            <div class="table-header">
+                <h3>Historial de pagos</h3>
+                <button class="btn-secondary" id="downloadInvoicesBtn">📥 Descargar todas</button>
+            </div>
+            <div class="table-responsive">
+                <table class="payments-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Descripción</th>
+                            <th>Monto</th>
+                            <th>Estado</th>
+                            <th>Factura</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentsTableBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/subscriptions.js"></script>
+</body>
+</html>
