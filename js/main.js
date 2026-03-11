@@ -198,23 +198,21 @@ function showError(elementId, message) {
 }
 
 // Video Demo - YouTube Lazy Load
-// Actualiza esta variable cuando subas el video a YouTube
-const YOUTUBE_VIDEO_ID = 'YOUR_VIDEO_ID'; // Ejemplo: 'dQw4w9WgXcQ'
+const YOUTUBE_VIDEO_ID = 'QfcozcbDwHg'; // Video genérico temporal
 
-function loadYouTube() {
+function loadVideoDemo() {
   const placeholder = document.getElementById('youtubePlaceholder');
   const frame = document.getElementById('youtubeFrame');
   const iframe = frame.querySelector('iframe');
   
-  // Si ya tienes el video en YouTube, usa esto:
-  if (YOUTUBE_VIDEO_ID !== 'YOUR_VIDEO_ID') {
-    iframe.src = `https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&rel=0`;
-    placeholder.style.display = 'none';
-    frame.style.display = 'block';
-  } else {
-    // Mientras tanto, mostrar mensaje
-    alert('Video en producción. Estará disponible pronto.\n\n📹 Mientras tanto, explora el dashboard haciendo login:\n\nEmail: admin@bas-saas.com\nPassword: admin123');
-  }
+  iframe.src = `https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&rel=0`;
+  placeholder.style.display = 'none';
+  frame.style.display = 'block';
+}
+
+// Mantener función legacy por si acaso
+function loadYouTube() {
+  loadVideoDemo();
 }
 
 // Alternativamente, si subes el video directamente al sitio:
