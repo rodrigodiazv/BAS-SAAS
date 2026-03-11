@@ -125,14 +125,14 @@
                 <p>Descubre cómo automatizar tu negocio en minutos</p>
             </div>
             <div class="video-container">
-                <div class="youtube-placeholder" id="youtubePlaceholder" onclick="loadVideoDemo()">
-                    <div class="play-button">
+                <div class="youtube-placeholder" id="youtubePlaceholder" onclick="loadVideoDemo()" style="position:relative; cursor:pointer; background:#000;">
+                    <img src="https://img.youtube.com/vi/QfcozcbDwHg/hqdefault.jpg" alt="Video Demo BAS" style="width:100%; height:100%; object-fit:cover;">
+                    <div class="play-button" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); pointer-events:none;">
                         <svg width="80" height="80" viewBox="0 0 80 80">
                             <circle cx="40" cy="40" r="38" fill="rgba(255,255,255,0.9)"/>
                             <polygon points="32,25 32,55 55,40" fill="#ff0000"/>
                         </svg>
                     </div>
-                    <img src="https://img.youtube.com/vi/QfcozcbDwHg/maxresdefault.jpg" alt="Video Demo BAS" style="width:100%; height:100%; object-fit:cover;">
                 </div>
                 <div id="youtubeFrame" style="display:none;">
                     <iframe width="100%" height="100%" 
