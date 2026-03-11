@@ -107,7 +107,7 @@ class ChatWidget {
       
       // Show welcome message if no messages
       if (this.messages.length === 0) {
-        this.addMessage('bot', '¡Hola! Soy Charly, tu asistente IA. ¿En qué puedo ayudarte con BAS?', false);
+        this.addMessage('bot', '¡Hola! Soy Charly, tu asistente IA. ¿En qué puedo ayudarte con BAS?\n\n💡 Tip: Únete a nuestro grupo VIP de Telegram para acceso prioritario y ofertas exclusivas: https://t.me/+O0VJcwQpoflhZDc8', false);
       }
     } else {
       chatWindow.style.display = 'none';
