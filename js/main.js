@@ -1,112 +1,198 @@
-// BAS - Business Automation System
-// Landing Page Interactions
+// BAS-SAAS - Main Landing Logic
+document.addEventListener('DOMContentLoaded', () => {
+  // Verificar si ya está logueado
+  if (auth.isAuthenticated()) {
+    // Mostrar botón de dashboard en lugar de login
+    updateNavForLoggedUser();
+  }
 
-// Smooth scroll
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
     });
+  });
+
+  // Modal de login/signup
+  setupAuthModals();
 });
 
-// Navbar scroll effect
-let lastScroll = 0;
-const navbar = document.querySelector('.navbar');
-
-window.addEventListener('scroll', () => {
-    const currentScroll = window.pageYOffset;
-    
-    if (currentScroll > 100) {
-        navbar.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-    } else {
-        navbar.style.boxShadow = 'none';
+function updateNavForLoggedUser() {
+  const ctaButtons = document.querySelectorAll('.btn-primary, .btn-hero');
+  ctaButtons.forEach(btn => {
+    if (btn.textContent.includes('gratis') || btn.textContent.includes('Prueba')) {
+      btn.textContent = '📊 Ir al Dashboard';
+      btn.href = 'dashboard.html';
     }
-    
-    lastScroll = currentScroll;
-});
-
-// Animate elements on scroll
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
-    });
-}, observerOptions);
-
-// Observe all feature cards and pricing cards
-document.querySelectorAll('.feature-card, .pricing-card').forEach(card => {
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(30px)';
-    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    observer.observe(card);
-});
-
-// Dynamic stats counter
-function animateCounter(element, target, duration = 2000) {
-    let start = 0;
-    const increment = target / (duration / 16);
-    
-    const timer = setInterval(() => {
-        start += increment;
-        if (start >= target) {
-            element.textContent = target;
-            clearInterval(timer);
-        } else {
-            element.textContent = Math.floor(start);
-        }
-    }, 16);
+  });
 }
 
-// Trigger counter animation when hero is visible
-const heroObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const stats = document.querySelectorAll('.stat strong');
-            // These would be dynamic in production
-            heroObserver.disconnect();
-        }
-    });
-});
+function setupAuthModals() {
+  // Crear modal de login
+  const loginModal = createLoginModal();
+  const signupModal = createSignupModal();
+  document.body.appendChild(loginModal);
+  document.body.appendChild(signupModal);
 
-const heroSection = document.querySelector('.hero');
-if (heroSection) {
-    heroObserver.observe(heroSection);
+  // Detectar clicks en CTAs
+  document.querySelectorAll('a[href="#signup"], a[href="#cta"]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      if (!auth.isAuthenticated()) {
+        e.preventDefault();
+        showModal('signupModal');
+      }
+    });
+  });
+
+  // Links de cambio entre modals
+  document.getElementById('showLogin').addEventListener('click', (e) => {
+    e.preventDefault();
+    hideModal('signupModal');
+    showModal('loginModal');
+  });
+
+  document.getElementById('showSignup').addEventListener('click', (e) => {
+    e.preventDefault();
+    hideModal('loginModal');
+    showModal('signupModal');
+  });
+
+  // Cerrar modals
+  document.querySelectorAll('.modal-close').forEach(btn => {
+    btn.addEventListener('click', () => {
+      hideModal('loginModal');
+      hideModal('signupModal');
+    });
+  });
+
+  // Click fuera del modal
+  window.addEventListener('click', (e) => {
+    if (e.target.classList.contains('modal-overlay')) {
+      hideModal('loginModal');
+      hideModal('signupModal');
+    }
+  });
+
+  // Formularios
+  document.getElementById('loginForm').addEventListener('submit', handleLogin);
+  document.getElementById('signupForm').addEventListener('submit', handleSignup);
 }
 
-// CTA tracking (placeholder)
-document.querySelectorAll('.btn-hero, .btn-primary, .btn-plan').forEach(button => {
-    button.addEventListener('click', (e) => {
-        console.log('CTA clicked:', button.textContent);
-        // In production: send to analytics
-    });
-});
+function createLoginModal() {
+  const modal = document.createElement('div');
+  modal.id = 'loginModal';
+  modal.className = 'modal-overlay';
+  modal.innerHTML = `
+    <div class="modal-content">
+      <button class="modal-close">×</button>
+      <h2>Iniciar sesión</h2>
+      <p class="modal-subtitle">Accede a tu cuenta BAS</p>
+      <form id="loginForm">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="tu@email.com" required>
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input type="password" name="password" placeholder="••••••••" required>
+        </div>
+        <div class="form-error" id="loginError"></div>
+        <button type="submit" class="btn-submit">Entrar</button>
+      </form>
+      <p class="modal-footer">
+        ¿No tienes cuenta? <a href="#" id="showSignup">Regístrate gratis</a>
+      </p>
+      <div class="modal-demo-hint">
+        💡 <strong>Demo:</strong> admin@bas-saas.com / admin123
+      </div>
+    </div>
+  `;
+  return modal;
+}
 
-// FAQ smooth toggle
-document.querySelectorAll('.faq-item').forEach(item => {
-    item.addEventListener('toggle', () => {
-        if (item.open) {
-            console.log('FAQ opened:', item.querySelector('summary').textContent);
-        }
-    });
-});
+function createSignupModal() {
+  const modal = document.createElement('div');
+  modal.id = 'signupModal';
+  modal.className = 'modal-overlay';
+  modal.innerHTML = `
+    <div class="modal-content">
+      <button class="modal-close">×</button>
+      <h2>Crear cuenta</h2>
+      <p class="modal-subtitle">Prueba gratis 14 días, sin tarjeta</p>
+      <form id="signupForm">
+        <div class="form-group">
+          <label>Nombre completo</label>
+          <input type="text" name="name" placeholder="Juan Pérez" required>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="tu@email.com" required>
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input type="password" name="password" placeholder="••••••••" required minlength="6">
+        </div>
+        <div class="form-error" id="signupError"></div>
+        <button type="submit" class="btn-submit">Crear cuenta gratis</button>
+      </form>
+      <p class="modal-footer">
+        ¿Ya tienes cuenta? <a href="#" id="showLogin">Inicia sesión</a>
+      </p>
+    </div>
+  `;
+  return modal;
+}
 
-// Mobile menu toggle (if needed in future)
-const mobileMenuToggle = () => {
-    const navLinks = document.querySelector('.nav-links');
-    navLinks.classList.toggle('mobile-active');
-};
+function handleLogin(e) {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const email = formData.get('email');
+  const password = formData.get('password');
 
-console.log('🚀 BAS Landing Page loaded');
+  const result = auth.login(email, password);
+  
+  if (result.success) {
+    window.location.href = 'dashboard.html';
+  } else {
+    showError('loginError', result.error);
+  }
+}
+
+function handleSignup(e) {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const name = formData.get('name');
+  const email = formData.get('email');
+  const password = formData.get('password');
+
+  const result = auth.register(email, password, name);
+  
+  if (result.success) {
+    window.location.href = 'dashboard.html';
+  } else {
+    showError('signupError', result.error);
+  }
+}
+
+function showModal(id) {
+  document.getElementById(id).classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function hideModal(id) {
+  document.getElementById(id).classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function showError(elementId, message) {
+  const errorEl = document.getElementById(elementId);
+  errorEl.textContent = message;
+  errorEl.style.display = 'block';
+  setTimeout(() => {
+    errorEl.style.display = 'none';
+  }, 5000);
+}
