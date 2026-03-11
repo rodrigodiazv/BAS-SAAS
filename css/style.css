@@ -861,3 +861,124 @@ body {
     flex-wrap: wrap;
     justify-content: center;
 }
+
+/* Video Demo Section */
+.video-demo {
+    padding: var(--spacing-xl) 0;
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+}
+
+.video-header {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.video-header h2 {
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 16px;
+}
+
+.video-header p {
+    font-size: 20px;
+    color: var(--gray);
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    background: #000;
+    aspect-ratio: 16 / 9;
+}
+
+.video-container video {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.youtube-placeholder {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.youtube-placeholder:hover {
+    transform: scale(1.02);
+}
+
+.youtube-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    transition: all 0.3s;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+}
+
+.youtube-placeholder:hover .play-button {
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+#youtubeFrame {
+    width: 100%;
+    height: 100%;
+}
+
+#youtubeFrame iframe {
+    width: 100%;
+    height: 100%;
+}
+
+.video-cta {
+    text-align: center;
+    margin-top: 32px;
+    font-size: 18px;
+    color: var(--gray);
+}
+
+.inline-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.inline-link:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .video-header h2 {
+        font-size: 32px;
+    }
+    
+    .video-header p {
+        font-size: 16px;
+    }
+    
+    .video-container {
+        border-radius: 12px;
+    }
+    
+    .play-button svg {
+        width: 60px;
+        height: 60px;
+    }
+}
