@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Relay - BAS SAAS</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<script>
+// This page receives chat messages and forwards them to Telegram via Clawdbot
+// It runs in an iframe or as a service worker bridge
+
+const TELEGRAM_CHAT_ID = '6707381699'; // Rodrigo's Telegram ID
+const SESSION_KEY = 'bas_chat_relay';
+
+// Listen for messages from chat widget
+window.addEventListener('message', async (event) => {
+    if (event.data.type === 'CHAT_MESSAGE') {
+        await relayToTelegram(event.data);
+    }
+});
+
+async function relayToTelegram(data) {
+    const { sessionId, message, userInfo } = data;
+    
+    // Format message for Telegram
+    const telegramMessage = formatMessage(sessionId, message, userInfo);
+    
+    // Send to Clawdbot message endpoint
+    // This will be configured to send directly via the message tool
+    try {
+        // Store locally first
+        storeMessage(sessionId, 'user', message);
+        
+        // In production, this would call your backend
+        // For now, we'll use a webhook or direct Telegram API
+        console.log('Sending to Telegram:', telegramMessage);
+        
+        // Notify parent window
+        window.parent.postMessage({
+            type: 'MESSAGE_SENT',
+            sessionId
+        }, '*');
+        
+    } catch (error) {
+        console.error('Error relaying message:', error);
+    }
+}
+
+function formatMessage(sessionId, message, userInfo) {
+    return `
+🌐 **Nuevo mensaje BAS-SAAS**
+
+👤 Usuario: ${userInfo.name || 'Anónimo'}
+📧 Email: ${userInfo.email || 'No registrado'}
+💼 Plan: ${userInfo.plan || 'Visitante'}
+🆔 Session: \`${sessionId}\`
+
+💬 Mensaje:
+${message}
+    `.trim();
+}
+
+function storeMessage(sessionId, sender, text) {
+    const key = `chat_${sessionId}`;
+    const messages = JSON.parse(localStorage.getItem(key) || '[]');
+    messages.push({
+        sender,
+        text,
+        timestamp: new Date().toISOString()
+    });
+    localStorage.setItem(key, JSON.stringify(messages));
+}
+
+// Expose API for checking responses
+window.chatRelay = {
+    getMessages: (sessionId) => {
+        const key = `chat_${sessionId}`;
+        return JSON.parse(localStorage.getItem(key) || '[]');
+    },
+    
+    addBotResponse: (sessionId, text) => {
+        storeMessage(sessionId, 'bot', text);
+        window.parent.postMessage({
+            type: 'NEW_BOT_MESSAGE',
+            sessionId,
+            text
+        }, '*');
+    }
+};
+
+console.log('Chat relay initialized');
+</script>
+</body>
+</html>
